@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>去除字符串空格</title>
+    </head>
+    <body>
+        <form name = "form1" method = "POST" action="">
+            原字符串：
+            <textarea name="oldString" cols="40" rows="4"></textarea>
+            转换后的字符串：
+            <textarea name="newString" cols="40" rows = "4"></textarea>
+            <input name="Button" type="button" class="btn_gray" onclick="trim()" value="去掉字符串的首尾空格">
+        </form>
+
+    </body>
+
+    <script language = "javascript">
+        function trim() {
+            var str = form1.oldString.value;
+            if(str==""){
+                alert("请输入原字符串");
+                form1.oldString.focus();
+                return;
+            }else{
+                var objExp=/(^\s*)|(\s*$)/g;
+                str=str.replace(objExp, "");
+            }
+            form1.newString.value=str;
+        }    
+    </script>
+</html>
