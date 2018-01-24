@@ -539,5 +539,88 @@ include 指令 与 \<jsp:include>动作标识的**区别**：
 - 子动作标识\<jsp:param> 用于向转向的目标文件传递参数
 
 #### 5.5.3 传递参数标识\<jsp:param>
+可作为其他标识的子标识，用于为其他标识传递参数  
+语法格式：
+````
+<jsp param name="参数名" value="参数值"/>
+````
 
+````
+<jsp:forward page="modify.jsp">
+  <jsp:param name="userId" value="7"/>
+</jsp:forward>
+````
+
+## 6. JSP内置对象
+### 6.1 JSP内置对象概述
+JSP中一共预定义了9个对象，分别为request、response、session、application、out、pageContext、config、page和exception。这些对象可直接使用
+
+### 6.2 request 对象
+request对象封装了由客户端生成的HTTP请求的所有细节，主要包括HTTP头信息、系统信息、请求方式和请求参数等
+
+#### 6.2.1 访问请求参数
+request对象用于处理HTTP请求中的各项参数，最常用的就是获取访问请求参数  
+当通过超链接的形式发送请求时，可为该请求传递参数，可以通过在超链接后面加上"?"来实现
+````
+<a herf="delete.jsp?id=1">删除</a>
+````
+> 如果同时指定多个参数，各参数间用"&"隔开
+
+````
+//通过request对象的getParameter()方法获取传递的参数值
+<%
+request.getParameter("id");
+%>
+````
+#### 6.2.2 在作用域中管理属性
+在进行请求转发时，需要把一些数据传递到转发后的页面进行处理。需要使用request对象的setAttribute()方法将数据保存到request范围内的变量中  
+语法如下:
+````
+request.setAttribute(String name, Object object);
+````
+- name  变量名，String类型
+- object  指定在request范围内传递的数据，为Object类型
+
+保存到request范围内的变量后，可以通过request对象的getAttribute()方法获得变量值
+````
+request.getAttribute(String name);
+````
+
+#### 6.2.3 获取 cookie
+cookie是小段文本信息，在网络服务器上生成，并发送给浏览器。cookie用于标识用户身份，记录用户名和密码，跟踪重复用户等  
+浏览器将cookie以key/value的形式保存到客户机指定目录中  
+通过cookie的getCookies()方法可获得所有cookie对象的集合；  
+getName()方法获取指定名称cookie；  
+getValue()方法即得到cookie对象的值；  
+将一个cookie对象发送到客户端，使用response对象的addCookie()方法
+
+> 在向cookie中保存的信息若包括中文，则需要调用java.net.URLEncoder类的encode()方法，将信息进行编码；在读取cookie内容时要用java.net.URLDecoder类的decode()方法进行解码
+
+#### 6.2.4 解决中文乱码
+使用UTF-8编码  
+将获取到的数据通过String构造器使用指定编码类型重新构造一个String对象
+````
+<body>
+  name参数为:<%=new String(request.getParameter("name").getBytes("ISO-8859-1"), "UTF-8")%>
+<\body>
+````
+#### 6.2.5 获取客户端信息
+方法 | 说明 
+----|------
+getHeader(String name) | 获得HTTP协议定义的文件头信息  
+getHeaders(String name) | 返回指定名字的request Header的所有值  
+getHeaderNames()) | 返回所有request Header的名字  
+getMethod() | 获得客户端向服务端传送数据的方法，如get、post、header、trace  
+getProtocol() | 获得客户端向服务端传输数据的协议名
+getRequestURI() | 获得发出请求字符串的客户端地址，不包括请求的参数  
+getRequestURL() | 获取发出请求字符串的客户端地址  
+getRealPath() | 返回当前请求文件的绝对路径 
+getRemoteAddr() | 获取客户端的IP地址  
+getRemoteHost() | 获取客户端的主机名  
+getRemoteName() | 获取服务器名字  
+getRemotePath() | 获取客户端所请求的脚本文件的文件路径  
+getRemotePort() | 获取服务器端口号  
+
+### 6.3 response 对象
+response 对象用于响应客户请求，向客户端输出信息。它封装了JSP产生的响应，并发送到客户端以响应客户端的请求
 
