@@ -1,0 +1,1 @@
+alert("测试外部调用JavaScript语句")
