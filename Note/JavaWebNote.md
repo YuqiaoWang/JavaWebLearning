@@ -624,3 +624,256 @@ getRemotePort() | 获取服务器端口号
 ### 6.3 response 对象
 response 对象用于响应客户请求，向客户端输出信息。它封装了JSP产生的响应，并发送到客户端以响应客户端的请求
 
+#### 6.3.1 重定向网页
+sendRedirect()方法可将网页重定向到另一页面  
+重定向操作支持将地址重定向到不同主机上（与转发不同）  
+request中的属性全部失效，并开始一个新的request对象  
+语法：
+````
+response.sendRedirect(String path);
+````
+#### 6.3.2 处理HTTP文件头
+- 禁用缓存
+- 设置页面自动刷新
+- 定时跳转网页
+
+#### 6.3.3 设置输出缓冲
+当满足以下情况之一，会把缓冲区内容写到客户端
+- JSP页面输出信息已全部写入缓冲区
+- 缓冲区已满
+- 在JSP页面调用了response对象的flushBuffer()或out对象的flush()方法
+
+### 6.4 session 对象
+会话，通过session可以在web页面间跳转时，保存用户的状态，使整个用户会话一直存在，直到浏览器关闭
+
+#### 6.4.1 创建及获取客户的会话
+setAttribute()将信息保存在session范围内  
+getAttribute()将获取保存在session内的信息  
+````
+session.getAttribute(String name);
+session.setAttribute(String name, Object obj);
+````
+#### 6.4.2 从会话中移动指定绑定对象
+````
+remove(String name)
+````
+#### 6.4.3 销毁session
+````
+session.invalidate();
+````
+#### 6.4.4 会话超时管理
+getLastAccessedTime()：返回客户端最后一次与会话相关的请求时间  
+setMaxInactiveInterval()：以秒为单位设置session有效时间
+getMaxInactiveInterval():获取最大时间间隔
+
+### 6.5 application 对象
+用于保存所偶程序中的公有数据，在服务器启动时自动创建，服务器停止时销毁  
+相比session，application的生命周期更长，类似于系统的全局变量
+#### 6.5.1 访问程序初始化参数
+程序初始化参数在web.xml文件中设置，位于Web应用所在目录下的web-inf子目录，通过\<context-param>标记配置初始化参数
+- getInitParameter()：返回已命名对象的参数值
+- getAttributeNames()：返回所有已定义初始化参数名的枚举
+
+#### 6.5.2 管理应用程序环境属性
+- getAttributeNames()
+- getAttribute(String name)
+- setAttribute(String key, Object obj)
+- removeAttribute(String name)
+
+### 6.6 Out对象
+out对象用于在浏览器内输出信息，并管理应用服务器上的输出缓冲区。使用out对象输出数据时，可对数据缓冲区操作。  
+待数据输出完毕后，及时关闭输出流
+#### 6.6.1 向客户端输出数据
+print()和println()方法;
+#### 6.6.2 管理缓冲区
+- clear(): 清除缓冲区中的内容
+- clearBuffer(): 清除当前缓冲区的内容
+- flush(): 刷新流
+- isAutoFlush(): 检测当前缓冲流是否自动清空
+- getBufferSize(): 获取缓冲区大小
+
+### 6.7 其他内置对象
+#### 6.7.1 pageContext对象
+获取页面上下文，通过它可获取JSP页面的request、response、session、application、exception等对象。pageContext对象的创建和初始化都由容器完成，JSP页面可直接使用pageContext对象
+> pageContext对象实际很少用到
+
+#### 6.7.2 config对象
+取得服务器配置信息
+- getServletContext()
+- getServletName()
+- getInitParameter()
+- getInitParameterNames()
+
+#### 6.7.3 page对象
+代表JSP本身，只有在JSP页面内才合法，本质上是包含当前Servle接口引用的变量，可看作this关键字的别名
+####6.7.4 expcetion对象
+
+## 7. JavaBean 技术
+### 7.1 JavaBean 介绍
+javaBean 组件：将java代码封装的类，与HTML代码分离，完成业务逻辑处理
+![](pic_7.1.png)
+
+
+### 7.2 JavaBean应用
+#### 7.2.1 获取JavaBean属性信息
+防止外部直接对JavaBean属性调用，通常将JavaBean属性设为private，并提供public的getXxx()方法  
+> 使用 \<jsp:useBean>可实例化JavaBean对象；\<jsp:getProperty>可获取JavaBean中的属性信息
+
+#### 7.2.2 对JavaBean属性赋值
+若JavaBean对象提供setXxx()方法，就可以在JSP页面通过\<jsp:setProperty>进行赋值
+
+### 7.3 在JSP中应用JavaBean
+JavaBean对象的生命周期可自行设置，存在与4种范围：page、request、session、application,默认为page
+
+## 8. Servlet技术
+### 8.1 Servlet基础
+Servlet是运行在Web服务器端的Java程序，用Java编写，封装了对HTTP请求的处理，它的运行需要Servlet容器支持
+#### 8.1.1 Servlet 与 JSP 的区别
+JSP是一种在Servlet规范之上的动态网页技术，区别在于：
+- 角色不同：JSP页面可存在HTML和Java代码并存的情况，Servlet需要承担客户请求与业务处理的中间角色，JSP更具有显示层的角色
+- 编程方法不同：使用Servlet开发web需要遵循java标准，而JSP需要遵循脚本语言规范
+- Servlet需要编译后运行
+- 速度不同：JSP效率低于Servlet
+
+### 8.2 Servlet API
+### 8.3 Servlet 开发
+
+## 9. 过滤器和监听器
+### 9.1 Servlet过滤器
+Servlet过滤器与Serlvet 相似，具有拦截客户端请求的功能，可改变请求中的内容，满足实际开发需要  
+过滤器实质是在web服务器上的一个web组件，用于拦截客户端与目标资源的请求，并对请求进行一定过滤处理后再发给目标资源  
+![](pic_9.1.png)
+
+#### 9.1.2 过滤器核心对象
+过滤器对象在javax.servlet包中，名称为Filter，是一个接口
+#### 9.1.3 过滤器创建与配置
+> 使用过滤器并不一定要将请求向下传递到下一过滤器或目标资源。也可在过滤处理后，直接回应客户端
+````
+<!--过滤器声明-->
+<filter>
+  <!--过滤器名称-->
+  <filter-name>MyFilter</filter-name>
+  <!--过滤器完整类名-->
+  <filter-class>com.lyq.MyFilter</filter-class>
+</filter>
+<!--过滤器映射-->
+<filter-mapping>
+  <!--过滤器名称-->
+  <filter-name>MyFilter</filter-name>
+  <!--过滤器URL映射-->
+  <url-pattern>/MyFilter</url-pattern>
+</filter-mapping>
+````
+\<filter-mapping>标签用于创建过滤器映射，主要作用是指定web应用中，哪些URL应用哪一个过滤器进行处理。在\<filter-mapping>中需要指定过滤器名称与过滤器URL映射
+#### 9.1.4 字符编码过滤器
+> 在web.xml文件中配置过滤器，其过滤器的URL映射可以使用正则表达式进行配置，如“\*”来匹配所有请求
+
+### 9.2 Servlet监听器
+#### 9.2.1监听器简介
+作用：监听web容器有效期事件，是由容器管理的  
+利用Listner接口监听在容器中的某个执行程序，并根据其应用程序需求做出适当响应
+8个Listener对应6个Event类
+
+#### 9.2.2 Servlet监听器原理
+#### 9.2.3 Servlet上下文监听
+可监听ServletContext对象的创建、删除以及属性添加、删除和修改操作，需要用到2个接口
+##### <1>. ServletContextListener 接口
+实现监听ServletContext的创建和删除，提供2个方法，被称为“Web应用的生命周期方法”
+- contextInitialized(ServletContextEvent event)：通知正在收听的对象，应用程序已被加载及初始化
+- contextDestroyed(ServletContextEvent event)：通知正在收听的对象，应用程序已被载出，即关闭
+
+#### <2>. ServletAttributeListener接口
+主要实现ServletContext属性的增加、删除和修改
+- attributeAdded(ServletContextAttributeEvent event)：当有对象加入Application范围时，通知正在收听的对象
+- attributeReplaced(ServletContextAttributeEvent event)：当在Application范围有对象取代另一对象时，通知正在收听的对象
+- attributeRemoved(ServletContextAttributeEvent event)：当有对象从Application范围移除时，通知正在收听的对象
+
+#### 9.2.4 HTTP会话监听
+##### <1>. HttpSessionListener接口
+实现HTTP会话创建、销毁
+- sessionCreated(HttpSessionEvent event)：通知收听对象，session已被加载/初始化
+- sessionDestroyed(HttpSessionEvent event)：通知收听对象，session已被载出
+
+##### <2>. HttpSessionActivationListener接口
+监听HTTP会话的active和passivate
+- attributeAdded(HttpSessionBindingEvent event)：当有对象加入session范围时，通知收听对象
+- attributeReplaced(HttpSessionBindingEvent event):session范围有对象取代另一对象，通知
+- attributeRemoved(HttpSessionBindingEvent event)：有对象从session范围移除，通知
+
+##### <3>. HttpBindingListener接口
+监听HTTP会话中对象的绑定信息，它是唯一不需要在web.xml中设定的Listerner
+- valueBound(HttpSessionBindingEvent event)：当有对象加入session范围时会被自动调用
+- valueUnBound(HttpSessionBindingEvent event)：当有对象从session范围移除时自动调用
+
+##### <4>. HttpSessionAttributeListener接口
+监听HTTP会话中属性的设置请求
+- sessionDidActivate(HttpSessionEvent event)：通知对象，它的session已变为有效
+- sessionWillPassivate(HttpSessionEvent event)：通知对象，它的session已变为无效
+
+#### 9.2.5 Servlet请求监听
+可以监听客户端请求
+##### <1>. ServletRequestListener接口
+- requestInitialized(ServletRequestEvent event)：通知对象，ServletRequest已被加载/初始化
+- requestDestroyed(ServletRequestEvent event)
+
+##### <2>. ServletRequestAttributeListener接口
+- attributeAdded(ServletRequestAttributeEvent event)：当有对象加入request范围时，通知
+- attributeReplaced(ServletRequestAttributeEvent event)：当在request范围有对象取代另一对象，通知
+- attributeRemoved(ServletRequestAttributeEvent event)：当有对象从request范围移除，通知
+
+### 9.3 Servlet3.0新特性
+- 新增注释：@WebServlet @WebFilter @WebInitParam
+- 对文件上传的支持
+- 异步处理
+
+
+## 10. Java Web 的数据库操作
+### 10.1 JDBC技术
+JDBC 在java程序与数据库之间起到了桥梁的作用
+![](pic_10.1.png)
+### 10.1.2 JDBC连接数据库过程
+- 注册数据库驱动：将数据库驱动类加载到JVM
+- 构建数据库连接URL：构建数据库连接URL：“JDBC协议+IP地址/域名+端口+数据库名称”
+- 获取Connection对象：通过驱动管理器获取数据库连接Connection,是JDBC封装的数据库连接对象
+
+### 10.2 JDBC API
+#### 10.2.1 Connection接口
+是与特定数据库的连接会话，只有特定数据库的连接对象，才能访问数据库
+#### 10.2.2 DriverManager类
+用于用户及驱动程序之间，是JDBC管理层
+#### 10.2.3 Statement接口
+提供执行语句和获取查询结果的方法，封装了SQL语句
+#### 10.2.4 PreparedStatement接口
+继承Statement接口，针对带参数SQL语句执行操作进行扩展，可用占位符"?"来代替SQL语句中的参数，然后再对其赋值
+#### 10.2.5 ResultSet接口
+接收查询结果集
+
+### 10.3 JDBC数据库操作
+#### 10.3.1 添加数据
+使用insert语句实现插入数据的sql语句，参数可用"?"占位符代替，然后通过PreparedStatement对其赋值并执行SQL
+#### 10.3.2 查询数据
+通过一个对象来装载查询结果集，即ResultSet对象  
+#### 10.3.3 修改数据
+使用update语句实现
+#### 10.3.4 删除数据
+delete语句
+#### 10.3.5 批处理
+#### 10.3.6 调用存储过程
+
+### 10.4 JDBC在JavaWeb中的应用
+#### 10.4.1 开发模式
+MVC（Model-View-Controller）是一种程序设计理念，将软件分为3层：模型层、视图层和控制层  
+模型层泛指业务逻辑，处理真正业务操作；  
+视图层指与用户交互的界面，不包含业务逻辑；  
+控制层对用户各种请求分发处理，将指定请求分配给指定业务逻辑进行处理  
+![](pic_10.2.png)
+客户端通过JSP页面与程序交互，对于数据的增删改查请求由Servlet对其分发处理，真正的数据库操作通过JDBC封装的JavaBean实现
+#### 10.4.1 分页查询
+
+## 11. EL
+## 12. JSTL标签
+## 13. Ajax技术
+### 13.2 Ajax开发模式与传统开发模式的比较
+![](pic_13.1.png)
+
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="de3bff63-0d0c-45dc-bcd1-25607a8c181c" name="Tomcat" url="http://localhost:8080/excerciseOutPut">
+        <fileTransfer port="0" mountedRoot="C:\Program Files\apache-tomcat-9.0.2\webapps\excerciseOutPut" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -248,7 +248,7 @@ JSP表达式由变量、常量组成
 - include 指令
 - taglib 指令:用来定义一个标记库及标记的前缀
 
-##### page 指令
+##### <1>page 指令
 语法规则
 ````
 <%@ page language="脚本语言"
@@ -269,5 +269,104 @@ JSP表达式由变量、常量组成
 - 每个属性只能用一次，但是import指令可使用多次
 - <%@ page%>指令区分大小写
 
+##### <2>include指令
+在JSP网页中插入文件的方式： include指令和jsp:include动作  
+被插入的文件可以是JSP文件、HTML文件或其他文本文件  
+语法
+````
+<%@ include file="相对地址" %>
+````
+> file是include指令的属性，在include指令中只有1个属性
+
+##### <3>taglib指令
+定义一个标记库以及标记的前缀  
+语法:
+````
+<%@ taglib uri="URITOLibrary" prefix="标记前缀"%>
+````
+
+#### 2.4.5 JSP 动作
+用来控制JSP引擎的行为，可以动态插入文件、重用JavaBean组件、导向另一页面  
+常见JSP 动作元素
+- jsp:include  在页面得到请求时包含一个文件
+- jsp:forward  引导请求者进入新页面
+- jsp:plugin   连接客户端的Applet或Bean插件
+- jsp:useBean  应用JavaBean组件
+- jsp:setProperty  设置JavaBean属性
+- jsp:getProperty  设置JavaBean属性并输出
+
+##### <1>jsp:include动作
+在即将生成的页面动态插入文件，在页面运行时才将文件插入  
+语法：
+````
+<jsp:include page="文件相对路径" flush="true" />或
+<jsp:include page="文件相对路径" flush="true">
+    <jsp:param name="参数名1" value="参数值1"/>
+    <jsp:param name="参数名2" value="参数值2"/>
+</jsp:include>
+````
+> include指令与 jsp:include动作的区别：include指令是静态的，JSP文件被转换成Servlet时候引入文件，把被插入文件插到当前位置后再编译；jsp:include动作是动态的，插入文件时间是在页面被请求的时候，JSP引擎不把插入文件和原JSP文件合并成一个新JSP文件，而是运行时插入文件
+
+##### <2>jsp:forward动作
+停止当前页面的执行，转向另一个HTML或JSP页面。JSP引擎不再处理当前页面剩下的内容，缓冲区被清空  
+在客户端看到原页面地址，而实际显示另一页面的内容  
+语法：
+````
+<jsp:forward page="文件名">
+````
+
+##### <3>jsp:plugin动作
+将服务器端Java小程序(Applet)或JavaBean组件下载到浏览器端去执行，相当于在客户端浏览器插入Java插件  
+语法:
+````
+<jsp:plugin
+        type="bean | applet"
+        code="保存类的文件名"
+        codebase="类路径"
+        [name="对象名"]
+        [archiv="相关文件路径"]
+        [align="bottom | top | middle | left | right"]
+        [height="displayPixels"]
+        [width="displayPixels"]
+>
+</jsp:plugin>
+````
+
+##### <4>jsp:useBean 动作
+用来装载一个将要在JSP页面中使用的JavaBean,创建一个JavaBean实例并指定其名字和作用范围
+````
+<jsp:useBean id="bean的名称" scope="有效范围" class="包名.类名"/>
+````
+
+### 2.5 Servlet
+#### 2.5.1 什么是Servlet
+Servlet是一种服务器端的Java应用程序，可以生成动态Web页面。担当客户请求与服务器响应的中间层。Servlet是位于Web服务器内部的服务器端的Java应用程序，由服务器进行加载  
+Servlet=Server + Applet 指Servlet为服务器端的小程序
+
+#### 2.5.2 Servlet 特点
+
+#### 2.5.3 Servlet 生命周期
+##### <1>Servlet初始化阶段
+在下列时刻Servlet容器装载Servlet
+- Servlet容器启动时自动装载某些Servlet，实现它只需在web.xml文件中的\<Servlet>\</Servlet>之间添加：
+````
+<loadon-startup>1</loadon-startup>
+````
+- 在Servlet容器启动后，客户首次向Servlet发送请求
+- Servlet类文件被更新后，重新装载Servlet
+
+Servlet 被装载后，Servlet容器创建一个Servlet实例并调用Servlet的init()方法进行初始化，在Servlet整个生命周期内，init()方法只被调用一次
+
+##### <2>Servlet响应请求阶段
+对用户到达Servlet的请求，Servelet容器会创建特定与这个请求的ServletRequest对象和ServletResponse对象，然后调用Servlet的service方法，从ServletRequest对象获得客户端请求信息，处理该请求，并通过ServletResponse对象向客户返回响应信息 
+对Tomcat，它会将传递过来的参数放在一个Hashtable
+````
+private Hashtable<String String[]> paramHashStringArray = new Hashtable<String String[]>();
+````
+
+##### <3>Servlet终止阶段
+当Web应用被终止，或Servlet容器终止运行，或Servlet容器重新装载Servlet新实例，Servlet容器会调用Servlet的destroy()方法，释放Servlet的资源
+
+#### 2.5.4 Servlet配置
 
 

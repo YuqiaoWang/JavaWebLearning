@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=utf-8 errorPage="errorPageDirec.jsp%>
+<%@ page contentType="text/html; charset=utf-8" errorPage="errorPageDirec.jsp"%>
     <html>
         <head>
             <title>page指令示例</title>

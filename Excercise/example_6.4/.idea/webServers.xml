@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="b28affd0-ce64-4148-b932-eefd746ecb09" name="Tomcat" url="http://localhost:8080/online">
-        <fileTransfer port="0" mountedRoot="E:\apache-tomcat-9.0.1\webapps\online" accessType="MOUNT" />
+        <fileTransfer port="0" mountedRoot="C:\Program Files\apache-tomcat-9.0.2\webapps\online" accessType="MOUNT" />
       </webServer>
     </option>
   </component>
