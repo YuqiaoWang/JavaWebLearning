@@ -1,0 +1,6 @@
+com\how2java\controller\CategoryController.class
+com\how2java\service\CategoryService.class
+com\how2java\mapper\CategoryMapper.class
+com\how2java\pojo\Category.class
+com\how2java\service\impl\CategoryServiceImpl.class
+com\how2java\test\MybatisTest.class

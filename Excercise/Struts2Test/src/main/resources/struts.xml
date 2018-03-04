@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd" >
+<!--配置Struts2-->
+<struts>
+    <package name="myPackage" namespace="/"
+             extends="struts-default">
+        <!--注入action-->
+        <action name="right" class="bupt.action.FirstAction">
+            <result name="success">/success.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="first">
+            <result>/first.jsp</result>
+        </action>
+        <action name="userAction" class="bupt.action.UserAction">
+            <result name="add">/user_add.jsp</result>
+            <result name="update">/user_update.jsp</result>
+        </action>
+    </package>
+</struts>

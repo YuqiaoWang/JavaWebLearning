@@ -1,0 +1,5 @@
+bupt\ssm\mapper\CategoryMapper.class
+bupt\ssm\pojo\Category.class
+bupt\ssm\service\impl\CategoryServiceImpl.class
+bupt\ssm\service\CategoryService.class
+bupt\ssm\controller\CategoryController.class

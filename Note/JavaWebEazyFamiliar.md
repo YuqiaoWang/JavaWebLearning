@@ -369,4 +369,531 @@ private Hashtable<String String[]> paramHashStringArray = new Hashtable<String S
 
 #### 2.5.4 Servlet配置
 
+#### 2.5.5 Servlet使用
 
+### 2.6 JavaBean
+
+### 2.7 XML
+
+HTML描述Web页面显示格式，XML描述Web页面的内容；  
+HTML是Web显示数据的通用方法，XML提供了一个直接处理Web数据的通用方法  
+
+#### 2.7.1 XML文档结构
+
+- 声明部分：声明该文档是XML文档
+- 定义部分：定义XML数据的类型及其所使用的DTD（可选）
+- 内容部分：用XML标签标注过的文档内容
+
+1. XML声明
+````
+<? xml version encoding standalone?>
+<!--version:XML标准版本号
+    encoding：编码
+    standalone:指定在XML被解析前，是否使用外部或内部DTD，值为yes（内部DTD）或no（外部DTD）；若不使用DTD，则不适用这个属性
+-->
+````
+> 声明语句全为小写
+
+2. 文档定义类型（DTD）
+    - 作用：定义XML文档内容的结构，按统一格式存储信息
+    - 创建DTD，XML使用的元素可在内部/外部定义
+        - 内部：
+            ````
+            <!DOCTYPE rootelement
+            [element and attribute declarations]
+            >
+            ````
+        - 外部：
+            ````
+            <!DOCTYPE rootelement [PUBLIC|SYSTEM] "name-of-file">
+            <!--PUBLIC表示DTD存放在公用服务器，SYSTEM表示存放在本地计算机-->
+            ````
+    - 在DTD中定义元素
+        ````
+        <!ELEMENT elementname content>
+        ````
+3. XML文档内容编辑  
+XML 必须包含根元素，形成文档树
+````
+<root>
+<child>
+<subchild>...</subchild>
+</child>
+</root>
+````
+
+4. XML文档解析
+
+
+
+## 3. JavaWeb 开发模式
+### 3.1 JavaWeb开发组件联系和原理
+#### 3.1.1 JSP+JavaBean
+以JSP为中心的设计模式  
+
+#### 3.1.2 JSP+JavaBean+Servlet
+Servlet充当控制器角色，负责接收客户端web浏览器发送来的请求，依据处理的不同结果，转发到对应JSP页面（viewer）实现在浏览器端的显示；  
+JSP充当视图的角色，负责输出响应结果；  
+JavaBean充当模型的角色，负责具体业务逻辑和业务数据
+
+开发步骤：
+1. 定义一系列的Bean来表示数据
+2. 使用一个Servlet来处理请求
+3. 在Servlet中填充Bean
+4. 在Servlet中，将Bean存储到请求、会话或者Servlet上下文中
+5. 将请求转到JSP页面
+6. 在JSP页面，从Bean中提取数据
+
+### 3.2 真正原理
+#### 两种方式的特点
+JSP + JavaBean：
+- 程序可读性高
+- 可重复利用性高
+- 缺乏流程控制，每一个JSP都要验证需求的参数正确度、确认用户身份权限、异常等问题
+![](fig_5.1.png)
+
+JSP+Servlet+JavaBean:
+- JSP页内没有处理逻辑，仅负责检索原先由Servlet创建的对象或JavaBean，从Servlet中提取动态内容插入静态模板
+- 分离了内容与表达
+- 核心的程序管控
+
+### 3.3 MVC模式
+MVC：Model（模型）-View（视图）-Controller（控制器）
+![](fig_5.3.png)
+
+## 4. JavaWeb 开发框架
+### 4.1 JavaWeb开发框架
+共同特点：都遵循MVC设计模式
+### 4.2 Struts
+Struts2是传统Struts1注入WebWork的设计理念的框架  
+![](fig_6.1.png)
+#### 4.2.1 Struts2组成
+核心控制器FilterDispatcher（由Struts2框架提供）、业务控制器和业务逻辑组件（用户自己实现）
+|组件|作用|
+|---|---|
+|FilterDispatcher|起中央控制器作用的过滤器|
+|Action|处于Model层的Action，调用JavaBean实现业务逻辑|
+|struts.xml|核心配置文件，配置有Action、Result等|
+|result|和forward类似，转发的目的地，支持多种视图技术|
+
+#### 4.2.2 Struts2应用
+Struts1的入口点是一个Servlet，Struts2的入口点是一个过滤器(Filter)  
+
+
+### 4.3 Spring
+#### 4.3.1 Spring 概念
+1. spring是开源的轻量级框架
+2. spring核心2部分：
+    - AOP：面向切面编程，扩展功能不是修改源代码实现
+    - IOC：反转控制
+        - 原来：使用类对象调用方法，创建类对象的过程需要new出新对象
+        - 对象的创建过程不用new方式实现，而是交给spring配置创建类对象
+3. spring是一站式框架
+    - spring在javaEE三层结构中，每一层都提供不同的解决技术
+        - web层：SpringMVC
+        - service层：Spring的IOC
+        - DAO层：Spring的JDBCTemplate
+4. spring版本
+    - struts2/Hibernate5.x/Spring4.x
+
+#### 4.3.2 Spring的IOC操作
+1. 把对象的创建交给Spring进行管理
+2. IOC操作两部分：
+    - IOC的配置文件方式
+    - IOC的注解方式
+
+#### 4.3.3 IOC底层原理
+1. IOC底层原理使用的技术
+    - xml配置文件
+    - dom4j 解决 xml
+    - 工厂设计模式
+    - 反射
+
+2. 分析IOC原理
+````
+/**java bean
+*/
+public class UserService {
+
+}
+public class UserServlet{
+    //得到UserService的对象
+    //原始：new创建
+    UserFactory.getService();
+}
+````
+
+第一步，创建xml文件，配置要创建对象类
+````
+<bean id="userService" class="xx.xxx.UserService">
+````
+
+第二步 创建工厂类，使用DOM4j解析配置文件+反射
+````
+public class UserFactory{
+    //返回UserService对象的方法
+    public static UserService getService() {
+        //1.使用dom4j解析xml文件
+        //根据ID值 userService, 得到id值对应class属性值
+        String classValue = "class属性值";
+        //2.使用反射来创建类的对象
+        Class clazz = Class.forName(classValue);
+        //创建类对象
+        UserService service = clazz.newInstance();
+        return service;
+    }
+}
+````
+
+3. IOC入门案例
+- 第一步 导入jar包
+    - 做spring最基本功能时，只需4个核心jar包：Beans、Core、Context、SpEL
+    - 导入支持日志输出的jar包
+- 第二步 创建类，在类里面创建方法
+    ````
+    public class User {
+        public void add() {
+            System.out.println("add");
+        }
+    }
+    ````
+- 第三步 创建Spring配置文件，配置创建类
+    - (1)Spring 核心配置文件名称和位置不是固定的
+        - 官方建议applicationContext.xml,建议放在src下
+    - (2)引入schema约束（在doc中可找到对应的html文件，底端有约束样例）
+        ````
+        <beans>
+            <bean id="user" class="xx.xxx.User"/>
+        </beans>
+        ````
+- 第四步 写代码测试对象创建
+    ````
+    public class TestIOC{
+        @Test
+        public void testUser() {
+            //1.加载spring配置文件，根据创建对象
+            ApplicationContext context = 
+                        new ClassPathXmlApplication("applicaion.xml");
+            //2.得到配置创建的对象
+            User user = (User) context.getBean("user");
+            user.add();
+        }
+    }
+    ````
+#### 4.3.3 Spring 的 Bean管理（xml方式）
+1. Bean实例化的方式
+- 在Spring里面通过配置文件创建对象
+- bean实例化是那种实现方式
+    - 第一种 使用类的无参构造创建（重点）
+        - 见上一节入门案例
+    - 第二种 使用静态工厂创建
+        - 创建静态的方法，返回类对象
+        ````
+        public class BeanFactory{
+            public static Bean getBean() {
+                return new Bean();
+            }
+        }
+        ````
+        ````
+        <bean id="bean" class="x.xx.BeanFactory" factory-method="getBean"></bean>
+        ````
+    - 第三种 使用实例工厂创建
+        - 创建非静态方法，返回类对象
+        ````
+        <bean id="bean" class="x.xx.BeanFactory" factory-bean="beanFactory" factory-method="getBean"></bean>
+        ````
+2. Bean 标签常用属性
+- id属性：起名称，任意（不能用中文、#、_）
+    - 根据id值得到配置对象
+- class：创建对象所在类的全路径
+- name：功能与Id一样，但可以包含特殊符号，目前不用，为了整合Struts1
+- scope：bean的作用范围
+    - singleton:默认值，单例
+    - protoptype:多例
+    - request:创建对象，把对象放到request域
+    - session：创建对象，放到session域
+    - globalSession
+
+#### 4.3.4 属性注入
+1. 创建对象时，向类里属性设置值
+2. 注入的3种方式
+    - set方法注入（spring中用的最多）
+        ````
+        <bean id="book" class="x.xx.Book">
+            <!--注入属性值-->
+            <property name="bookname" value="LL"></property>
+        </bean>
+        ````
+    - 有参构造
+        ````
+        <bean id="demo" class="x.xx.Demo">
+            <!--有参构造-->
+            <constructor-arg name="username" value="Admin"></constructor-arg>
+        </bean>
+        ````
+    - 使用接口
+3. 在Spring中，只支持前2种方式
+
+#### 4.3.5 注入对象类型属性
+1. 创建两个类（User和Service）
+    - 在Service中得到user对象
+2. 具体实现过程
+    - 在service中把user作为成员变量
+    - 写User成员的set方法
+
+3. 在配置文件中完成注入关系
+````
+<!--配置对象-->
+<bean id="user" class="x.xx.User"></bean>
+<bean id="service" class="x.xx.Service">
+    <!--注入对象，不能写value属性，现在用的是对象;而要用ref,写user的bean标签id值-->
+    <property name="user" ref="user"></property>
+</bean>
+````
+
+#### 4.3.6 注入复杂类型属性
+1. 数组
+2. list
+3. map
+4. properties
+
+````
+<bean id="user" class="xx.xx.User">
+    <!--数组-->
+    <property name="array">
+        <list>
+            <value>Mon</value>
+            <value>Tue</value>
+            <value>Wed</value>
+        </list>
+    </property>
+
+    <!--list-->
+    <property name="list">
+        <list>
+            <value>Mon</value>
+            <value>Tue</value>
+            <value>Wed</value>
+        </list>
+    </property>
+
+    <!--map-->
+    <property name="map">
+        <map>
+            <enrty key="Mon" value="1"></entry>
+            <entry key="Tue" value="2"></entry>
+        </map>
+    </property>
+
+    <!--properties-->
+    <property name="properties">
+        <props>
+            <prop key="Mon">1</prop>
+        </props>
+    </property>
+</bean>
+````
+
+#### 4.3.6 IOC与DI区别
+- IOC：控制反转，把对象创建交给Spring进行配置
+- DI：依赖注入，向类里面的属性中设置值
+- 关系：依赖注入不能单独存在，需要在IOC基础上完成
+
+#### 4.3.7 Spring 整合web项目原理
+1. 加载spring核心配置文件，如果用new，功能可以实现，但效率低
+2. 实现思想：把加载配置文件和创建对象过程，在服务器启动时完成
+3.实现原理
+    - ServletContext对象
+    - 监听器
+    - 具体使用：
+        - 在服务器启动时候，为每个项目创建一个ServletContext对象
+        - 在ServletContext对象创建时，使用监听器可监听到ServletContext对象创建
+        - 加载spring配置文件，用配置文件配置对象创建
+        - 把创建出来的对象放到ServletContext域对象里(setAttribute方法)
+        - 获取对象时，到ServletContext域得到(getAttribute方法)
+
+#### 4.3.8 Spring的bean管理（注解）
+1. 注解：
+    - 代码里的特殊标记，使用注解可完成功能
+    - 注解写法：@注解名称(属性名称=属性值)
+    - 注解使用在类/方法/属性上面
+
+2. Spring注解开发准备
+    - 导入jar包（最基本：commons-logging、log4j、spring-beans、spring-context、spring-core、spring-expression）（以及aop）
+    - 创建类、方法
+    - 创建spring配置文件，引入约束
+        - beans
+        - context
+            ````
+            <beans>
+                <!--开启注解扫描
+                到包里的类、方法、属性上面是否有注解-->
+                <context:component-scan base-package="xx.xx"></context:component-scan>
+                <!--只扫描属性上面的注解-->
+                <context:annotation-config></context:annotation-config>
+            </beans>
+            ````
+    - 开启注解扫描
+
+3. 注解创建对象
+    - 在创建对象的类上面使用注解实现
+        ````
+        @Component(value="user")    //<bean id="user" class="">
+        public class User{
+
+        }
+        ````
+    - 创建对象有4个注解
+        - @Component 有3个衍生注解（目前功能一致）
+        - @Controller:web层
+        - @Service：业务层
+        - @Repository：持久层
+        - 目前这四个注解功能是一样的，都创建对象
+    - 创建对象单实例/多实例
+        ````
+        @Component(value="user")
+        @Scope(value="prototype")
+        ````
+
+4. 注解注入属性
+    - 创建service类，创建user类，在service得到user对象
+        - 创建user和service对象
+            ````
+            @Component(value="user")
+            public class User{
+                //
+            }
+            ````
+            ````
+            @Component(value="service")
+            public class Service{
+                //
+            }
+            ````
+        - 在Service里定义user成员变量
+            - 方式1 @Autowire
+                ````
+                @Component(value="service")
+                public class Service{
+                    @Autowired
+                    private User user;
+                    //使用注解方式时不需要使用set方法  
+                }
+                ````
+            - 方式2 @Resource
+                ````
+                @Component(value="service")
+                public class Service{
+                    //name属性值写注解创建user对象的value值
+                    @Resource(name="user")
+                    private User user;
+                }
+                ````
+5. 配置文件和注解混合使用
+    - 创建对象操作使用配置文件方式实现
+        ````
+        <bean id="" class=""></bean>
+        ````
+    - 注入属性的操作用注解方式实现
+        ````
+        public class Service{
+            @Resource(name="user")
+            private User user;
+        }
+        ````
+
+#### 4.3.9 AOP概念
+1. AOP：面向切面编程，扩展功能不修改源代码实现
+2. AOP采取横向抽取机制，取代纵向继承体系重复性
+    - 第一种情况：有接口，使用jdk动态代理
+        - 使用动态代理方式，创建接口实现类代理对象
+    - 第二种情况：没有接口，使用cglib动态代理
+        - 创建子类代理对象
+        - 在子类里调用父类方法完成增强
+
+#### 4.3.10 AOP 术语
+
+1. Join Point 连接点：类里面哪些方法可被增强，这些方法称为连接点
+
+2. Pointcut 切入点：在类里有很多方法可被增强，实际增强的某个方法叫切入点
+
+3. Advice 通知/增强：增强的逻辑，如扩展某个方法的功能
+    - 前置通知：在方法之前执行
+    - 后置：之后
+    - 异常：方法出现异常
+    - 最终：后置之后
+    - 环绕：之前和之后
+
+4. Aspect 切面：把增强应用到具体方法上面，过程称为切面
+    - 把增强用到切入点的过程
+
+#### 4.3.11 Spring 的 AOP 操作
+
+1. zaiSpring里进行AOP操作，使用AspectJ实现
+
+2.使用AspectJ实现AOP有2种方式
+    - 基于AspectJ的xml配置
+    - 基于AspectJ的注解方式
+
+3. AOP操作准备
+    - 导入除基本jar包外，还要aop、aspectj包
+    - 创建Spring核心配置文件，引入aop约束
+
+4. 使用表达式配置切入点
+    - 常用表达式：
+        - execution(<访问修饰符>?<返回类型><方法名>(<参数>)<异常>)
+        - (1) execution(* xx.xx.Book.add(..))
+        - (2) execution(* xx.xx.Book.x(..))
+        - (3) execution(* *.*(..))
+
+5.AspectJ的AOP操作
+````
+    <!--1.配置对象-->
+    <bean id="book" class="xx.xx.Book"></bean>
+    <bean id="myBook" class="xx.xx.MyBook"></bean>
+    <!--2.配置aop操作-->
+    <aop:config>
+        <!--2.1配置切入点-->
+        <aop:pointcut expression="execution(* xx.xx.Book.*(..))" id="pointcut1"/>
+        <!--2.2配置切面，把增强用到方法上-->
+        <aop:aspect ref="myBook">
+            <!--配置增强类型
+                method：增强类里面使用哪个方法作为前置-->
+                <aop:before method="read" pointcut-ref="pointcut1"/>
+        </aop:aspect>
+    </aop:config>
+````
+
+#### 4.3.12 Log4j 介绍
+1. 通过log4j开运行时信息
+
+2. 使用
+    - 导入log4j的jar包
+    - 复制log4j的配置文件，复制到src下
+        - log4j.properties
+
+3.设置日志级别
+    - info/debug/..
+
+#### 4.3.13 Spring的JDBC Template
+````
+public class JDBCTemplateDemo {
+    public void add() {
+        //设置数据库信息
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql:///program_name");
+        dataSource.setUsername("root");
+        dataSource.setPassword("passwod");
+        
+        //创建jdbcTemplate对象，设置数据源
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        //调用jdbcTemplate对象里的方法实现操作
+        String sql = "insert into user values(?, ?)";
+        int rows = jdbcTemplate.update(sql, "luck", "250");
+        System.out.println(rows);
+    }
+}
+````
